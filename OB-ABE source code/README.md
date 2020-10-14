@@ -5,6 +5,7 @@ To test the prototype, the two following files are required:
 2- EnclaveOBABE.signed (/OBABE/sgx/enclave_EnclaveOBABE/EnclaveOBABE.signed)
 
 The definition of "struct _GByteArray" in garray.h file (/usr/include/glib-2.0/glib/garray.h) needs to be changed as follows:
+
 struct _GByteArray
 {
   guint8 *data;
