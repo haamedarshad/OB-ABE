@@ -1,4 +1,4 @@
-To test the prototype the two following files are required:
+To test the prototype, the two following files are required:
 
 1- sample (/OBABE code/OBABE/sgx/enclave_EnclaveOBABE/sample)
 
