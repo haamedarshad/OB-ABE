@@ -16,5 +16,5 @@ struct _GByteArray
 In other words, "guint obg;" is added to the definition of struct _GByteArray. 
 
 
-The code for the baseline CP-ABE scheme, which we have extended, is available at:
+*The code for the baseline CP-ABE scheme, which we have extended, is available at:
 http://acsc.cs.utexas.edu/cpabe/#general
