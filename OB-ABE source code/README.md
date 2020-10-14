@@ -8,8 +8,7 @@
         
      struct \_GByteArray
          {
-        
-          guint8 \*data;
+          guint8 *data;
           
           guint	len;
           
