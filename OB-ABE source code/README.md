@@ -8,14 +8,10 @@
          
       struct _GByteArray
          {
-          
           guint8 *data;
-          
-          guint	len;
-          
+          guint len;
           guint obg;
-          
-        };
+         };
 
 In other words, **guint obg;** is added to the definition of *struct _GByteArray*. 
 
