@@ -1,0 +1,51 @@
+16:57:07 **** Incremental Build of configuration Intel(R) SGX Hardware Debug for project OBABE ****
+make SGX_DEBUG=1 SGX_MODE=HW -f sgx/Makefile all 
+make -C ./sgx/enclave_EnclaveOBABE  -f sgx_u.mk all;
+make[1]: Entering directory '/home/macbook/Documents/GitHub/ABE/Papers/ABE-SGX/Code/OBABE/sgx/enclave_EnclaveOBABE'
+untrusted/enc.c: In function ‘scandata’:
+untrusted/enc.c:40:8: warning: format ‘%s’ expects argument of type ‘char *’, but argument 2 has type ‘char **’ [-Wformat=]
+  scanf("%s",policy_enc);
+        ^
+untrusted/enc.c: At top level:
+untrusted/enc.c:73:6: error: conflicting types for ‘ocall_enc’
+ void ocall_enc(char *Out, size_t *s){
+      ^
+In file included from /opt/intel/sgxsdk/include/sgx_edger8r.h:46:0,
+                 from untrusted/EnclaveOBABE_u.h:8,
+                 from untrusted/enc.c:13:
+untrusted/EnclaveOBABE_u.h:20:36: note: previous declaration of ‘ocall_enc’ was here
+ void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_enc, (char** Out, size_t* s_dst));
+                                    ^
+/opt/intel/sgxsdk/include/sgx_defs.h:49:49: note: in definition of macro ‘SGX_UBRIDGE’
+ # define SGX_UBRIDGE(attr, fname, args...) attr fname args
+                                                 ^
+untrusted/enc.c: In function ‘encryption’:
+untrusted/enc.c:105:35: warning: passing argument 3 of ‘bswabe_enc’ from incompatible pointer type [-Wincompatible-pointer-types]
+sgx_u.mk:124: recipe for target 'untrusted/enc.o' failed
+    if( !(cph = bswabe_enc(pub, m, policy_enc)) )
+make[1]: Leaving directory '/home/macbook/Documents/GitHub/ABE/Papers/ABE-SGX/Code/OBABE/sgx/enclave_EnclaveOBABE'
+                                   ^
+sgx/Makefile:12: recipe for target 'all' failed
+In file included from untrusted/enc.c:9:0:
+/usr/local/include/bswabe.h:75:15: note: expected ‘char *’ but argument is of type ‘char **’
+ bswabe_cph_t* bswabe_enc( bswabe_pub_t* pub, element_t m, char* policy );
+               ^
+untrusted/enc.c:128:49: warning: passing argument 3 of ‘ecall_enc’ from incompatible pointer type [-Wincompatible-pointer-types]
+    ret3 = ecall_enc(global_eid, &ecall_return3, bufferIn,&length);
+                                                 ^
+In file included from untrusted/enc.c:13:0:
+untrusted/EnclaveOBABE_u.h:24:14: note: expected ‘char **’ but argument is of type ‘char *’
+ sgx_status_t ecall_enc(sgx_enclave_id_t eid, int* retval, char** In, size_t* len);
+              ^
+untrusted/enc.c:153:35: warning: passing argument 3 of ‘bswabe_enc’ from incompatible pointer type [-Wincompatible-pointer-types]
+    if( !(cph = bswabe_enc(pub, m, policy_enc)) )
+                                   ^
+In file included from untrusted/enc.c:9:0:
+/usr/local/include/bswabe.h:75:15: note: expected ‘char *’ but argument is of type ‘char **’
+ bswabe_cph_t* bswabe_enc( bswabe_pub_t* pub, element_t m, char* policy );
+               ^
+make[1]: *** [untrusted/enc.o] Error 1
+make: *** [all] Error 2
+
+16:57:08 Build Finished (took 566ms)
+

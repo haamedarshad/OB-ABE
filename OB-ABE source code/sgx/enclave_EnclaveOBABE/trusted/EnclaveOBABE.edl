@@ -1,0 +1,20 @@
+/* EnclaveOBABE.edl - Top EDL file. */
+
+enclave {
+    
+    /* 
+     * ocall_EnclaveOBABE_sample - invokes OCALL to display string buffer inside the enclave.
+     *  [in]: copy the string buffer to App outside.
+     *  [string]: specifies 'str' is a NULL terminated buffer.
+     */
+    untrusted {
+        void ocall_EnclaveOBABE_sample([in, string] const char *str);
+    };
+
+
+    trusted {
+    	    public int ecall_EnclaveOBABE_sample(); 	    
+   			public int ecall_enc([in,size=len] char *In, size_t len, [out,size=len] char *In2);
+			public int ecall_dec([in,size=len] char *In, size_t len, [out,size=len] char *In2);
+    };
+};

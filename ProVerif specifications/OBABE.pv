@@ -1,0 +1,93 @@
+type skey.
+type pkey.
+type obligation.
+const Ksgx: skey [private].
+free SKABE: skey.
+free chUserOS: channel.
+free chOSSGX: channel.  
+free chUserCloud: channel. 
+fun h(bitstring): bitstring.
+fun pk(skey):pkey.
+fun penc(bitstring, pkey):bitstring.
+fun execOBG(obligation):bool.
+reduc forall m:bitstring, k:skey; pdec(penc(m,pk(k)), k)= m.
+fun senc(bitstring,skey):bitstring.
+reduc forall m:bitstring,k:skey; sdec(senc(m,k),k)=m.
+event ObligationsRequired(bitstring,obligation).
+event ObligationsEnforced(bitstring,obligation).
+event Decrypted(bitstring,obligation).
+table tCT(bitstring, bitstring).
+
+let Uenc =
+let PKABE = pk(SKABE) in
+new m: bitstring;
+new ob: obligation; 
+out(chUserOS,(m,ob,PKABE));
+in(chUserOS, rCT:bitstring);
+out(chUserCloud, rCT);
+in(chUserCloud, ridCT:bitstring).
+
+let Udec =
+new xidCT:bitstring;
+out(chUserCloud, xidCT);
+in(chUserCloud, rCT:bitstring);
+out(chUserOS, (rCT,SKABE));
+in(chUserOS,wrxym:bitstring).
+
+let User = Uenc | Udec.
+
+let Oenc =
+in(chUserOS,(rm:bitstring, rob:obligation, rPKABE:pkey));
+out(chOSSGX,(rm,rob));
+in(chOSSGX, rCsgx: bitstring);
+let CT = penc(rCsgx, rPKABE) in
+out(chUserOS, CT).
+
+let Odec =
+in(chUserOS,(xrCT:bitstring, rSKABE:skey));
+let Csgx = pdec(xrCT, rSKABE) in
+out(chOSSGX,Csgx);
+in(chOSSGX,rxym:bitstring);
+out(chUserOS, rxym).	
+	
+let OS = Oenc | Odec.	
+	
+let Senc=
+in(chOSSGX,(xrm:bitstring,xrob:obligation));
+event ObligationsRequired(xrm,xrob);
+let Csgx = senc((xrm,xrob), Ksgx) in
+out(chOSSGX, Csgx).
+
+let Sdec =
+in(chOSSGX, rCsgx:bitstring);
+let (xym:bitstring, xyrob:obligation) = sdec(rCsgx,Ksgx) in
+let eobg = execOBG(xyrob) in
+if eobg then (
+event ObligationsEnforced(xym,xyrob);
+out(chOSSGX,xym);
+event Decrypted(xym,xyrob)).
+ 
+let SGX = Senc | Sdec.
+
+
+let Cstore =
+in(chUserCloud, xrCT:bitstring);
+new idCT:bitstring;
+insert tCT(idCT, xrCT);
+out(chUserCloud,idCT).
+
+let Cretrieve =
+in(chUserCloud, xxidCT:bitstring);
+get tCT(=xxidCT, CT) in
+out(chUserCloud, CT).
+
+let Cloud = Cstore | Cretrieve.
+
+
+
+query i:bitstring,j:obligation;event(Decrypted(i,j))==> (event(ObligationsEnforced(i,j)) ==> event(ObligationsRequired(i,j))).
+
+
+
+
+process !User|!OS|!SGX|!Cloud
